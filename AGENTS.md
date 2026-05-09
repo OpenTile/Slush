@@ -4,3 +4,4 @@
 	- Changed behavior → propose the edit and **ask for explicit user confirmation** before mutating an existing entry.
 	- IDs are append-only and never reused; removed items stay as `~~ID~~ (removed)` with a note in the spec.
 	- Reference IDs in spec files and commit messages.
+- Keep `README.md` in sync: update it when status, platforms, principles, or top-level entry points change. Keep it concise — it's a landing page, not a duplicate of `docs/`.
