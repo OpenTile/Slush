@@ -8,7 +8,7 @@
   - `REQ-###` requirement — system property/constraint, including measurable targets (latency, footprint, etc.)
   - `OUT-###` explicit non-goal
 - IDs are append-only and **never reused**. Removed items move to the **Removed / superseded** section at the bottom (not left as tombstones inside their original list).
-- Reference IDs from `specs/S###-*.md`, commit messages, and code comments where useful (e.g. `REQ-022: ...`).
+- Reference IDs from `SPEC/S###-*.md`, commit messages, and code comments where useful (e.g. `REQ-022: ...`).
 - See `AGENTS.md` for the user-story / requirement framework.
 - `MET-###` is retired — measurable targets now live inside the relevant `REQ`. Existing `MET` IDs remain as tombstones; see **Removed / superseded** at the bottom.
 
@@ -82,10 +82,10 @@ Press → speak → release → tasks appear.
 - **OUT-008** — Accounts, login, server-side anything.
 
 ## Removed / superseded
-Tombstones for IDs that have been retired. Kept here so references in `specs/` and commits stay resolvable.
+Tombstones for IDs that have been retired. Kept here so references in `SPEC/` and commits stay resolvable.
 
-- ~~**US-005**~~ — *(was: data on-device with no account/cloud sync)* — promoted to **REQ-032**; was an NFR, not a discrete user action. See `specs/S003`.
-- ~~**MET-001**~~ — *(was: voice → tasks ≤ 10 s)* — folded into **REQ-031**. See `specs/S003`.
-- ~~**MET-002**~~ — *(was: zero required network calls except the LLM request)* — folded into **REQ-032**. See `specs/S003`.
-- ~~**MET-003**~~ — *(was: usable after entering base URL + API key + model)* — promoted to **REQ-034**. See `specs/S003`.
+- ~~**US-005**~~ — *(was: data on-device with no account/cloud sync)* — promoted to **REQ-032**; was an NFR, not a discrete user action. See `SPEC/S003`.
+- ~~**MET-001**~~ — *(was: voice → tasks ≤ 10 s)* — folded into **REQ-031**. See `SPEC/S003`.
+- ~~**MET-002**~~ — *(was: zero required network calls except the LLM request)* — folded into **REQ-032**. See `SPEC/S003`.
+- ~~**MET-003**~~ — *(was: usable after entering base URL + API key + model)* — promoted to **REQ-034**. See `SPEC/S003`.
 - The `MET-###` family is retired; future measurable targets live inside `REQ`s.

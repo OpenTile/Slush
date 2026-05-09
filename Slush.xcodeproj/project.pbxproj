@@ -21,19 +21,32 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7582C1B22FAFABA5004F8176 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
+		7582C1B62FAFABA5004F8176 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7582C1B72FAFABA5004F8176 /* SlushKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SlushKit; sourceTree = "<group>"; };
 		75A972502FAF844E0064F652 /* Slush.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Slush.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A9725D2FAF84510064F652 /* SlushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlushTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		75A972522FAF844F0064F652 /* Slush */ = {
+		7582C1B52FAFABA5004F8176 /* DOC */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Slush;
+			path = DOC;
 			sourceTree = "<group>";
 		};
-		75A972602FAF84510064F652 /* SlushTests */ = {
+		7582C1BE2FAFABA5004F8176 /* SPEC */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SlushTests;
+			path = SPEC;
+			sourceTree = "<group>";
+		};
+		75A972522FAF844F0064F652 /* Sources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		75A972602FAF84510064F652 /* Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -60,8 +73,13 @@
 		75A972472FAF844E0064F652 = {
 			isa = PBXGroup;
 			children = (
-				75A972522FAF844F0064F652 /* Slush */,
-				75A972602FAF84510064F652 /* SlushTests */,
+				75A972522FAF844F0064F652 /* Sources */,
+				75A972602FAF84510064F652 /* Tests */,
+				7582C1B72FAFABA5004F8176 /* SlushKit */,
+				7582C1B22FAFABA5004F8176 /* AGENTS.md */,
+				7582C1B62FAFABA5004F8176 /* README.md */,
+				7582C1B52FAFABA5004F8176 /* DOC */,
+				7582C1BE2FAFABA5004F8176 /* SPEC */,
 				75A972512FAF844F0064F652 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -91,7 +109,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				75A972522FAF844F0064F652 /* Slush */,
+				75A972522FAF844F0064F652 /* Sources */,
 			);
 			name = Slush;
 			packageProductDependencies = (
@@ -115,7 +133,7 @@
 				75A9725F2FAF84510064F652 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				75A972602FAF84510064F652 /* SlushTests */,
+				75A972602FAF84510064F652 /* Tests */,
 			);
 			name = SlushTests;
 			packageProductDependencies = (
@@ -153,7 +171,7 @@
 			mainGroup = 75A972472FAF844E0064F652;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "../Packages/SlushKit" */,
+				75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "SlushKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 75A972512FAF844F0064F652 /* Products */;
@@ -492,16 +510,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "../Packages/SlushKit" */ = {
+		75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "SlushKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Packages/SlushKit;
+			relativePath = SlushKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		75DDCC022FAF84510064F652 /* SlushKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "../Packages/SlushKit" */;
+			package = 75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "SlushKit" */;
 			productName = SlushKit;
 		};
 /* End XCSwiftPackageProductDependency section */
