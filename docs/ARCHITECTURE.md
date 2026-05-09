@@ -8,6 +8,7 @@
 flowchart LR
     Mic[AVAudioEngine mic capture] --> ST[SpeechTranscriber<br/>SpeechAnalyzer, on-device]
     ST -->|partial + final text| RF[RecordFeature TCA]
+    Text[Text input field<br/>SwiftUI TextEditor] -->|typed dump| RF
     RF -->|persist| TR[(transcripts)]
     RF --> LLM[LLMClient<br/>OpenAI-compatible]
     LLM -->|JSON tasks| TP[TaskParser]
@@ -27,6 +28,7 @@ Slush is UX-driven (see PRD `Product principles`, `REQ-031`). The architecture b
 - **LLM call is fire-and-forget from the user's perspective.** The transcript is persisted immediately; extraction runs in a background effect; `TasksFeature` re-renders via `@FetchAll` when rows land. The user is never staring at a spinner that owns the UI thread (`REQ-031`, `REQ-033`).
 - **macOS hotkey path skips popover presentation.** Showing a popover would pay window-server latency on every capture; the hotkey starts recording without surfacing UI (`REQ-031`).
 - **All repository, transcription, and LLM work is non-main-actor.** The main actor only formats view state and runs animations. 60 fps during recording is a hard target (`REQ-031`).
+- **Typed input shares the LLM/repository pipeline (`REQ-025`).** No mic, no transcription, no permissions; the same `RecordFeature → LLMClient → TaskRepository → @FetchAll` path applies. The `REQ-031` budgets that don't depend on mic capture (tasks-visible after LLM ≤ 50 ms; UI never blocks) carry over to the typed path unchanged.
 
 ## Module breakdown
 
@@ -49,7 +51,7 @@ Slush is UX-driven (see PRD `Product principles`, `REQ-031`). The architecture b
 
 ## TCA reducers (responsibilities)
 - **`AppFeature`** — composes child features, wires `@Dependency` instances of repositories, transcriber, and LLM client.
-- **`RecordFeature`** — owns the recording state machine (`idle`, `recording`, `transcribing`, `extracting`, `error`). Streams partial transcripts into state, persists final `Transcript`, calls `LLMClient.extractTasks`, hands drafts to the repository, surfaces errors with the transcript retained for retry.
+- **`RecordFeature`** — owns the capture state machine (`idle`, `recording`, `transcribing`, `extracting`, `error`). Accepts text from two sources: live partials from `SpeechTranscribing` (voice path) and a bound text field (typed path, `REQ-025`). Persists final `Transcript`, calls `LLMClient.extractTasks`, hands drafts to the repository, surfaces errors with the transcript retained for retry.
 - **`TasksFeature`** — observes open and recently completed tasks via `@FetchAll`; handles complete and delete actions.
 - **`SettingsFeature`** — bindings for base URL, API key (round-tripped through `KeychainStoring`), model name, and (macOS only) the global hotkey combo.
 - **`MenuBarFeature`** (macOS) — popover open/close, hotkey events, brings child `RecordFeature` and `TasksFeature` into scope.
@@ -62,6 +64,8 @@ Slush is UX-driven (see PRD `Product principles`, `REQ-031`). The architecture b
 5. The decoded `[TaskDraft]` is passed to `TaskRepository.insert(_:sourceTranscriptId:)`, which writes all rows in a single SQLiteData transaction.
 6. `TasksFeature` re-renders automatically — its `@FetchAll` query observes the `tasks` table.
 7. On LLM failure, `RecordFeature` enters `error`, keeping the transcript and offering a retry action; the transcript row is preserved so the user does not lose their dump.
+
+**Typed-input path (`REQ-025`)**: steps 1–3 are skipped. The user types into a text field bound to `RecordFeature`; on submit, the entered text is committed directly as a `Transcript` row (`duration_seconds = 0` as a sentinel for "not recorded"), and the flow rejoins at step 4. Same persistence, same repository, same UI update path. Same failure semantics as voice (step 7).
 
 ## LLM integration
 - **Endpoint**: `POST {baseURL}/chat/completions` with `Authorization: Bearer {apiKey}`.
@@ -131,6 +135,7 @@ CREATE INDEX idx_tasks_open ON tasks(completed_at);
 ## Verification
 - **Manual end-to-end (iOS)**: build `SlushiOS` in Xcode 26, run on iPhone simulator, grant mic + speech permissions, configure LLM in Settings, record a 20 s dump, confirm tasks appear and survive relaunch.
 - **Manual end-to-end (macOS)**: build `SlushMac`, configure hotkey, fire hotkey from another foreground app, confirm recording starts without showing the popover and tasks are persisted.
+- **Typed-input smoke (`REQ-025`)**: in either app, switch to the text input on the Record surface, type a short paragraph, submit, confirm tasks appear and persist across relaunch. Mic permissions should not be required for this path.
 - **Unit tests in `SlushKit`**:
   - `OpenAICompatibleLLMClient` — golden-fixture decoding for both `json_schema` and `json_object` responses; malformed-response error path.
   - `SQLiteDataTaskRepository` — insert with transcript link, complete, delete, open-tasks query.

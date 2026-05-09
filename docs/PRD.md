@@ -29,10 +29,11 @@ Slush is **UX-driven**. The product only succeeds if it feels invisible — fast
 ## User stories
 - **US-001** — As a user with a fleeting thought, I want to capture it by speaking instead of typing, so that I don't lose it to friction.
 - **US-002** — As a macOS user mid-task in another app, I want to start recording without leaving my current app, so that I never break flow.
-- **US-003** — As a user, I want my spoken dump to become discrete, actionable tasks automatically, so that I don't have to structure them myself.
+- **US-003** — As a user, I want my brain dump to become discrete, actionable tasks automatically, so that I don't have to structure them myself.
 - **US-004** — As a user, I want to come back later, review what was captured, and check tasks off, so that the dump turns into progress.
 - **US-006** — As a user with a preferred LLM provider, I want to bring my own provider for task extraction, so that I am not locked in.
 - **US-007** — As a user whose extraction just failed, I want to retry it without re-recording, so that I don't lose what I said.
+- **US-008** — As a user, I want to type my brain dump, so that I can capture thoughts in writing.
 
 ## Core loop
 Press → speak → release → tasks appear.
@@ -54,6 +55,7 @@ Press → speak → release → tasks appear.
 - **REQ-022** — Task extraction via a single call to a user-configured OpenAI-compatible endpoint. *(US-003, US-006)*
 - **REQ-023** — Local persistence of all tasks and transcripts in SQLite. *(REQ-032)*
 - **REQ-024** — Offline operation up to the LLM call; LLM failure preserves the transcript so the user can retry. *(US-007)*
+- **REQ-025** — Text input is a first-class alternative to speech. The Record surface accepts a multiline text dump and feeds it directly to the same LLM extraction pipeline (skipping transcription). *(US-003, US-008)*
 
 ### Non-functional (UX, durability, footprint)
 - **REQ-031** — UX performance budget. Slush must feel instant:
