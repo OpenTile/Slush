@@ -1,0 +1,1 @@
+- Track every change in `specs/` as `S###-*.md` (sequential, append-only). New change → new file; small follow-up → update its file. Include the request (paraphrased), affected files, and relevant `REQ-###` / `US-###` IDs. Keep concise.
