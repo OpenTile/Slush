@@ -13,7 +13,5 @@ xcuserdata/
 # Swift Package Manager
 .build/
 .swiftpm/
-Packages/*/.build/
-Packages/*/.swiftpm/
 
 # Note: Package.resolved is committed at the app level so dependency versions stay pinned across machines.

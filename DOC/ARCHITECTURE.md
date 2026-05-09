@@ -34,7 +34,7 @@ Slush is UX-driven (see PRD `Product principles`, `REQ-031`). The architecture b
 
 Load-bearing settings — every Xcode target and Swift package must mirror these. Changing any of them is a deliberate architectural decision, not a tweak.
 
-- **Repo layout.** `App/` holds the Xcode project; `Packages/` holds Swift packages. New packages go under `Packages/<Name>/`; new Xcode targets stay inside `App/Slush.xcodeproj`.
+- **Repo layout.** `Slush.xcodeproj` lives at the repo root. App sources and resources live under `Sources/`, app tests under `Tests/`, shared package code under `SlushKit/`, and living docs under `DOC/` + `SPEC/`. New Xcode targets stay inside `Slush.xcodeproj`; new Swift packages live at the repo root unless a later spec introduces package grouping.
 - **Swift 6 language mode** project-wide. The Xcode 26 compiler is *version* 6.2 but its language mode is `6` — there is no Swift 6.2 *language mode*. Set `SWIFT_VERSION = 6.0` at the Xcode project level (not per target) and `swiftLanguageModes: [.v6]` plus `// swift-tools-version: 6.0` in every `Package.swift`.
 - **Approachable Concurrency on.** Xcode: `SWIFT_APPROACHABLE_CONCURRENCY = YES` at the project level. SPM: enumerate the upcoming features in `swiftSettings`:
   - `.enableUpcomingFeature("NonisolatedNonsendingByDefault")` (SE-0461)
@@ -75,9 +75,9 @@ When introducing a new Xcode target, do not redeclare these settings on the targ
 ### Repo layout (today)
 The target architecture below describes the eventual shape. Today the repo has fewer moving parts:
 
-- A single Xcode app target `Slush` (`App/Slush.xcodeproj`) supports iOS, iPadOS, and macOS from one source tree, plus `SlushTests` (Swift Testing). The split into `SlushiOS` and `SlushMac` arrives when macOS-specific UI (`MenuBarExtra`, `GlobalHotkeyService`) lands; until then both platforms ship from the combined `Slush` target. UI testing is not set up — the template's `SlushUITests` target was removed and will be reintroduced when an actual UI flow needs end-to-end coverage.
-- The app source group is a `PBXFileSystemSynchronizedRootGroup` (Xcode 26 file-system-synchronized group): adding a file under `App/Slush/` makes it part of the target automatically — no manual project-file edits.
-- `Packages/SlushKit/` is the first Swift package; future kit packages live as siblings under `Packages/`.
+- A single Xcode app target `Slush` (`Slush.xcodeproj`) supports iOS, iPadOS, and macOS from one source tree, plus `SlushTests` (Swift Testing). The split into `SlushiOS` and `SlushMac` arrives when macOS-specific UI (`MenuBarExtra`, `GlobalHotkeyService`) lands; until then both platforms ship from the combined `Slush` target. UI testing is not set up — the template's `SlushUITests` target was removed and will be reintroduced when an actual UI flow needs end-to-end coverage.
+- The app source and test groups are `PBXFileSystemSynchronizedRootGroup`s (Xcode 26 file-system-synchronized groups): adding app files under `Sources/` or test files under `Tests/` makes them part of the corresponding target automatically — no manual project-file edits.
+- `SlushKit/` is the first Swift package and is linked into the app target as a local package.
 
 
 ### `SlushKit` — Swift Package (shared)
@@ -181,6 +181,7 @@ CREATE INDEX idx_tasks_open ON tasks(completed_at);
 - **`SQLiteData` 1.6.1** (Point-Free) — typed SQLite schema and observation that drives `@FetchAll`.
 
 ## Verification
+- **Current skeleton checks**: `swift-format lint --configuration .swift-format --recursive Sources Tests SlushKit/Sources SlushKit/Tests --strict`; `cd SlushKit && swift test`; `xcodebuild -project Slush.xcodeproj -scheme Slush -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.4.1' test`.
 - **Manual end-to-end (iOS)**: build `SlushiOS` in Xcode 26, run on iPhone simulator, grant mic + speech permissions, configure LLM in Settings, record a 20 s dump, confirm tasks appear and survive relaunch.
 - **Manual end-to-end (macOS)**: build `SlushMac`, configure hotkey, fire hotkey from another foreground app, confirm recording starts without showing the popover and tasks are persisted.
 - **Typed-input smoke (`REQ-025`)**: in either app, switch to the text input on the Record surface, type a short paragraph, submit, confirm tasks appear and persist across relaunch. Mic permissions should not be required for this path.

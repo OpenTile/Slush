@@ -8,13 +8,15 @@ Slush is a local-first capture tool for iOS and macOS: press, speak, release —
 
 ## Status
 
-Skeleton scaffolded; no product code yet. The Xcode project (`App/`) and the first Swift package (`Packages/SlushKit/`) build under Swift 6 with the project's concurrency posture in place.
+Skeleton scaffolded; no product code yet. The root Xcode project and first Swift package build under Swift 6 with the project's concurrency posture in place.
 
-- [`App/`](App/) — Xcode project (`Slush.xcodeproj`); single `Slush` app target spans iOS, iPadOS, and macOS
-- [`Packages/SlushKit/`](Packages/SlushKit/) — first Swift package; canonical settings every future package mirrors
-- [`docs/PRD.md`](docs/PRD.md) — product requirements (MVP scope, user stories, success metrics)
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — modules, data flow, contracts, concurrency posture
-- [`specs/`](specs/) — append-only change log (`S###-*.md`)
+- [`Slush.xcodeproj`](Slush.xcodeproj/) — single `Slush` app target spanning iOS, iPadOS, and macOS
+- [`Sources/`](Sources/) — app source and resources
+- [`Tests/`](Tests/) — app unit tests
+- [`SlushKit/`](SlushKit/) — first Swift package; canonical settings every future package mirrors
+- [`DOC/PRD.md`](DOC/PRD.md) — product requirements (MVP scope, user stories, success metrics)
+- [`DOC/ARCHITECTURE.md`](DOC/ARCHITECTURE.md) — modules, data flow, contracts, concurrency posture
+- [`SPEC/`](SPEC/) — append-only change log (`S###-*.md`)
 
 ## Development
 
