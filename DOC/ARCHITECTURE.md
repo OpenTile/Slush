@@ -34,7 +34,7 @@ Slush is UX-driven (see PRD `Product principles`, `REQ-031`). The architecture b
 
 Load-bearing settings — every Xcode target and Swift package must mirror these. Changing any of them is a deliberate architectural decision, not a tweak.
 
-- **Repo layout.** `Slush.xcodeproj` lives at the repo root. App sources and resources currently live under `Sources/`, app tests under `Tests/`, shared package code under `SlushKit/`, and living docs under `DOC/` + `SPEC/`. These paths stay put until real product code justifies movement. Future app targets grow toward `Apps/iOS` and `Apps/macOS`; future reusable modules grow toward `Packages/<Module>/Package.swift`.
+- **Repo layout.** `App/` is the thin Xcode host: `App/Slush.xcodeproj` owns build settings, signing, platform app targets, resources, entitlements, plist files, and `App/Tests.xctestplan`. Reusable product code, app-shell modules, feature modules, and their tests grow inside the single `SlushKit/Package.swift` package as separate SPM targets. Do not create separate package directories until the one-package target model becomes a concrete problem.
 - **Swift 6 language mode** project-wide. The Xcode 26 compiler is *version* 6.2 but its language mode is `6` — there is no Swift 6.2 *language mode*. Set `SWIFT_VERSION = 6.0` at the Xcode project level (not per target) and `swiftLanguageModes: [.v6]` plus `// swift-tools-version: 6.0` in every `Package.swift`.
 - **Approachable Concurrency on.** Xcode: `SWIFT_APPROACHABLE_CONCURRENCY = YES` at the project level. SPM: enumerate the upcoming features in `swiftSettings`:
   - `.enableUpcomingFeature("NonisolatedNonsendingByDefault")` (SE-0461)
@@ -44,7 +44,7 @@ Load-bearing settings — every Xcode target and Swift package must mirror these
 - **No default actor isolation.** `SWIFT_DEFAULT_ACTOR_ISOLATION` stays unset; `Package.swift` does not call `.defaultIsolation(MainActor.self)`. The Composable Architecture's `@Reducer` and `@ObservableState` macros break under default-MainActor isolation, and the TCA maintainer recommends against the setting ([pointfreeco/swift-composable-architecture#3808](https://github.com/pointfreeco/swift-composable-architecture/issues/3808)). The "main actor only formats view state; infra is non-main" requirement (`REQ-031`) is met via TCA conventions: views and `@ObservableState` adopt `@MainActor` explicitly; reducers stay nonisolated; effects, repositories, transcribers, and LLM clients are `actor`s or nonisolated types. Strict concurrency at level `complete` is implicit under Swift 6 — no separate setting needed.
 - **Tests stay nonisolated by default.** Add `@MainActor` per `@Test` only when a test must touch main-actor state.
 
-**Canonical `Package.swift` for new packages:**
+**Canonical `SlushKit/Package.swift` shape for new modules:**
 
 ```swift
 // swift-tools-version: 6.0
@@ -57,65 +57,69 @@ let swiftSettings: [SwiftSetting] = [
 ]
 
 let package = Package(
-    name: "<Name>",
+    name: "SlushKit",
     platforms: [.iOS("26.4"), .macOS("26.4")],
-    products: [.library(name: "<Name>", targets: ["<Name>"])],
+    products: [
+        .library(name: "<Module>", targets: ["<Module>"]),
+    ],
     targets: [
-        .target(name: "<Name>", swiftSettings: swiftSettings),
-        .testTarget(name: "<Name>Tests", dependencies: ["<Name>"], swiftSettings: swiftSettings),
+        .target(name: "<Module>", swiftSettings: swiftSettings),
+        .testTarget(name: "<Module>Tests", dependencies: ["<Module>"], swiftSettings: swiftSettings),
     ],
     swiftLanguageModes: [.v6]
 )
 ```
 
-When introducing a new Xcode target, do not redeclare these settings on the target — they already inherit from the project level.
+When adding a module, create `SlushKit/Sources/<Module>` and `SlushKit/Tests/<Module>Tests`, then add the test target to `App/Tests.xctestplan` so the app scheme runs it.
 
 ## Module breakdown
 
 ### Repo layout (today)
-Today the repo intentionally has fewer moving parts than the target architecture:
+Today the repo intentionally has one app host and one package workspace:
 
-- A single Xcode app target `Slush` (`Slush.xcodeproj`) supports iOS, iPadOS, and macOS from one source tree, plus `SlushTests` (Swift Testing). The split into `SlushiOS` and `SlushMac` arrives when macOS-specific UI (`MenuBarExtra`, `GlobalHotkeyService`) lands; until then both platforms ship from the combined `Slush` target. UI testing is not set up — the template's `SlushUITests` target was removed and will be reintroduced when an actual UI flow needs end-to-end coverage.
-- The app source and test groups are `PBXFileSystemSynchronizedRootGroup`s (Xcode 26 file-system-synchronized groups): adding app files under `Sources/` or test files under `Tests/` makes them part of the corresponding target automatically — no manual project-file edits.
-- `SlushKit/` is the first Swift package and is linked into the app target as a local package. It remains the temporary implementation home until enough concrete code exists to split along real import boundaries.
+- `App/Slush.xcodeproj` has a single `Slush` app target that supports iOS, iPadOS, and macOS while the product is still a skeleton. It links the local `../SlushKit` package directly via `XCLocalSwiftPackageReference`.
+- `App/Client` holds the temporary app entry point, starter SwiftUI view, and app resources. This stays thin and only proves that the app target can import a package product.
+- `App/Tests.xctestplan` is the app scheme's test list. Every new `SlushKit` test target must be added here so `xcodebuild -project App/Slush.xcodeproj -scheme Slush ... test` runs the app host and package tests in one command.
+- `SlushKit/` is the single Swift package workspace. Current placeholder product code is `SomeLib`; future modules become additional products and targets in this package, not separate packages by default.
 
-Do not create empty packages or move files just to match the target layout. Add a module when it has code, tests, and a narrower dependency surface than the package it is leaving.
+Do not create empty modules or move files just to match the target layout. Add a module when it has code, tests, and a narrower dependency surface than the target it is leaving.
 
 ### Target app layout
-Future platform targets should keep app-owned code near the app:
+Future platform folders under `App/` should remain host-only:
 
-- `Apps/iOS` — `SlushiOSApp`, iOS plist/resources, platform navigation, and SwiftUI views such as `RecordView`, `TasksView`, and `SettingsView`.
-- `Apps/macOS` — `SlushMacApp`, macOS plist/resources, `MenuBarExtra` shell, hotkey/menu integration, settings window, and compact SwiftUI views.
+- `App/iOS` — iOS app target files such as `SlushiOSApp`, plist/resources, entitlements, and minimal platform bootstrap.
+- `App/macOS` — macOS app target files such as `SlushMacApp`, plist/resources, entitlements, `MenuBarExtra` host, hotkey/menu bootstrap, and settings-window declaration.
 
-Views are platform-owned. A shared feature can be rendered by multiple views, but view layout, platform navigation, app entry points, and resources belong to the app target.
+Product behavior stays in `SlushKit` modules. App targets import package products, bind them to platform entry points, and own platform resources.
 
 ### Target package layout
-Future reusable code should grow under `Packages/<Module>/Package.swift`, introduced only when there is real code to move:
+Future reusable code should grow as targets under `SlushKit/Sources/<Module>` with tests under `SlushKit/Tests/<Module>Tests`:
 
 - `SlushDomain` — shared domain models such as `Task`, `Transcript`, `TaskDraft`, and `Settings`.
 - `PersistenceClient` — task/transcript persistence interfaces and implementations shared by multiple features.
 - `CaptureFeature` — TCA capture, transcription, extraction, and retry behavior. `SpeechClient` and `LLMClient` stay here while capture is their only consumer.
 - `TasksFeature` — task list state, task actions, completion, deletion, and task observation behavior.
 - `SettingsFeature` — settings state, validation, persistence, API-key handling, and settings-specific dependencies.
+- `SlushiOSApp` — shared iOS app shell behavior and root composition, imported by the iOS app target.
+- `SlushMacApp` — shared macOS app shell behavior, menu-bar/window composition, and hotkey routing, imported by the macOS app target.
 
 Avoid a generic `SlushDependencies` package unless a concrete duplication or multi-consumer dependency appears. Prefer narrow dependencies owned by the feature that actually uses them.
 
 ### TCA ownership rules
 - Features are behavior-owned, not screen-owned. Split a feature when behavior diverges, not because two platforms render it differently.
-- Views take `StoreOf<Feature>` from the app target and send user-intent actions into shared features.
+- Platform views take `StoreOf<Feature>` from app-shell modules and send user-intent actions into shared features.
 - App shell features own tabs, popovers, windows, hotkey routing, and platform navigation; child features own product behavior.
 - Scope stores along stored child feature state. Do not scope through computed view-specific projections.
 
 ### `SlushiOS` — iPhone app target
-- SwiftUI app shell, root `AppView` hosting tab navigation: `RecordView`, `TasksView`, `SettingsView`.
+- Thin platform host under `App/iOS`; imports the `SlushiOSApp` package product and declares resources, plist, entitlements, and signing.
+- The `SlushiOSApp` package module owns root composition such as tab navigation: `RecordView`, `TasksView`, `SettingsView`.
 - Mic + speech permission gating before first record.
-- Initially depends on `SlushKit`; later depends directly on the feature/domain packages it renders.
 
 ### `SlushMac` — menubar app target
-- `MenuBarExtra` host with popover containing `RecordView` (compact) + recent `TasksView`.
-- Standalone `SettingsScene` window.
+- Thin platform host under `App/macOS`; imports the `SlushMacApp` package product and declares resources, plist, entitlements, and signing.
+- The `SlushMacApp` package module owns the `MenuBarExtra` composition, compact `RecordView`, recent `TasksView`, settings window composition, and hotkey routing.
 - `GlobalHotkeyService` registers the user's shortcut via `Carbon.HIToolbox` `RegisterEventHotKey`.
-- Initially depends on `SlushKit`; later depends directly on the feature/domain packages it renders.
 
 ## TCA reducers (responsibilities)
 - **`AppFeature`** — composes child features, wires `@Dependency` instances of repositories, transcriber, and LLM client.
@@ -201,7 +205,7 @@ CREATE INDEX idx_tasks_open ON tasks(completed_at);
 - **`SQLiteData` 1.6.1** (Point-Free) — typed SQLite schema and observation that drives `@FetchAll`.
 
 ## Verification
-- **Current skeleton checks**: `swift-format lint --configuration .swift-format --recursive Sources Tests SlushKit/Sources SlushKit/Tests --strict`; `cd SlushKit && swift test`; `xcodebuild -project Slush.xcodeproj -scheme Slush -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.4.1' test`.
+- **Current skeleton checks**: `swift-format lint --configuration .swift-format --recursive App/Client SlushKit/Sources SlushKit/Tests --strict`; `swift test --package-path SlushKit`; `xcodebuild -project App/Slush.xcodeproj -scheme Slush -destination 'platform=macOS' test`.
 - **Manual end-to-end (iOS)**: build `SlushiOS` in Xcode 26, run on iPhone simulator, grant mic + speech permissions, configure LLM in Settings, record a 20 s dump, confirm tasks appear and survive relaunch.
 - **Manual end-to-end (macOS)**: build `SlushMac`, configure hotkey, fire hotkey from another foreground app, confirm recording starts without showing the popover and tasks are persisted.
 - **Typed-input smoke (`REQ-025`)**: in either app, switch to the text input on the Record surface, type a short paragraph, submit, confirm tasks appear and persist across relaunch. Mic permissions should not be required for this path.

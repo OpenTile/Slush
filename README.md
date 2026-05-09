@@ -8,12 +8,12 @@ Slush is a local-first capture tool for iOS and macOS: press, speak, release —
 
 ## Status
 
-Skeleton scaffolded; no product code yet. The root Xcode project and first Swift package build under Swift 6 with the project's concurrency posture in place.
+Skeleton scaffolded; no product code yet. The thin app host and `SlushKit` package build under Swift 6 with the project's concurrency posture in place.
 
-- [`Slush.xcodeproj`](Slush.xcodeproj/) — single `Slush` app target spanning iOS, iPadOS, and macOS
-- [`Sources/`](Sources/) — app source and resources
-- [`Tests/`](Tests/) — app unit tests
-- [`SlushKit/`](SlushKit/) — first Swift package; canonical settings every future package mirrors
+- [`App/Slush.xcodeproj`](App/Slush.xcodeproj/) — single `Slush` app target spanning iOS, iPadOS, and macOS
+- [`App/Client`](App/Client/) — temporary thin app entry point, starter view, and resources
+- [`App/Tests.xctestplan`](App/Tests.xctestplan) — app-scheme test plan; add every new `SlushKit` test target here
+- [`SlushKit/`](SlushKit/) — single Swift package workspace; future modules grow as package targets
 - [`DOC/PRD.md`](DOC/PRD.md) — product requirements (MVP scope, user stories, success metrics)
 - [`DOC/ARCHITECTURE.md`](DOC/ARCHITECTURE.md) — modules, data flow, contracts, concurrency posture
 - [`SPEC/`](SPEC/) — append-only change log (`S###-*.md`)

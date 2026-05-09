@@ -12,11 +12,11 @@ let package = Package(
   name: "SlushKit",
   platforms: [.iOS("26.4"), .macOS("26.4")],
   products: [
-    .library(name: "SlushKit", targets: ["SlushKit"])
+    .library(name: "SomeLib", targets: ["SomeLib"])
   ],
   targets: [
-    .target(name: "SlushKit", swiftSettings: swiftSettings),
-    .testTarget(name: "SlushKitTests", dependencies: ["SlushKit"], swiftSettings: swiftSettings),
+    .target(name: "SomeLib", swiftSettings: swiftSettings),
+    .testTarget(name: "SomeLibTests", dependencies: ["SomeLib"], swiftSettings: swiftSettings),
   ],
   swiftLanguageModes: [.v6]
 )

@@ -1,13 +1,13 @@
 // © 2026 Andrei Chenchik. All rights reserved.
 // Unauthorized using, copying, distribution, or modification prohibited.
 
-import SlushKit
+import SomeLib
 import SwiftUI
 
 @main
 struct SlushApp: App {
   init() {
-    _ = SlushKit.identifier
+    _ = SomeEnum.identifier
   }
 
   var body: some Scene {

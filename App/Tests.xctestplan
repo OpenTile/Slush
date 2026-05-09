@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "7982438B-8EB8-4DDE-84C0-0193D0CB5232",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Slush.xcodeproj",
+      "identifier" : "75A9724F2FAF844E0064F652",
+      "name" : "Slush"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/SlushKit",
+        "identifier" : "SomeLibTests",
+        "name" : "SomeLibTests"
+      }
+    }
+  ],
+  "version" : 1
+}
