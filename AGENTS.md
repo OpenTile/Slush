@@ -1,1 +1,6 @@
 - Track every change in `specs/` as `S###-*.md` (sequential, append-only). New change → new file; small follow-up → update its file. Include the request (paraphrased), affected files, and relevant `REQ-###` / `US-###` IDs. Keep concise.
+- Keep `docs/` in sync with every change:
+	- New behavior → append a new `US-###` / `REQ-###` / `OUT-###` / `MET-###` to `docs/PRD.md`; update `docs/ARCHITECTURE.md` if modules, data flow, schema, or external contracts change.
+	- Changed behavior → propose the edit and **ask for explicit user confirmation** before mutating an existing entry.
+	- IDs are append-only and never reused; removed items stay as `~~ID~~ (removed)` with a note in the spec.
+	- Reference IDs in spec files and commit messages.
