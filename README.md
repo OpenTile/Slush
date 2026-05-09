@@ -16,6 +16,17 @@ Skeleton scaffolded; no product code yet. The Xcode project (`App/`) and the fir
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — modules, data flow, contracts, concurrency posture
 - [`specs/`](specs/) — append-only change log (`S###-*.md`)
 
+## Development
+
+Install pre-commit and enable the repository hooks:
+
+```sh
+brew install pre-commit
+pre-commit install
+```
+
+The pre-commit hook runs `swift-format` and may rewrite Swift files. Stage those changes before committing.
+
 ## Planned platforms
 
 - **iOS 26+** — record screen, tasks list, settings

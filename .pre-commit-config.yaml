@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/swiftlang/swift-format
+    rev: 602.0.0
+    hooks:
+      - id: swift-format
+        args: ["--configuration", ".swift-format"]
