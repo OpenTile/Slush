@@ -34,7 +34,7 @@ Slush is UX-driven (see PRD `Product principles`, `REQ-031`). The architecture b
 
 Load-bearing settings — every Xcode target and Swift package must mirror these. Changing any of them is a deliberate architectural decision, not a tweak.
 
-- **Repo layout.** `Slush.xcodeproj` lives at the repo root. App sources and resources live under `Sources/`, app tests under `Tests/`, shared package code under `SlushKit/`, and living docs under `DOC/` + `SPEC/`. New Xcode targets stay inside `Slush.xcodeproj`; new Swift packages live at the repo root unless a later spec introduces package grouping.
+- **Repo layout.** `Slush.xcodeproj` lives at the repo root. App sources and resources currently live under `Sources/`, app tests under `Tests/`, shared package code under `SlushKit/`, and living docs under `DOC/` + `SPEC/`. These paths stay put until real product code justifies movement. Future app targets grow toward `Apps/iOS` and `Apps/macOS`; future reusable modules grow toward `Packages/<Module>/Package.swift`.
 - **Swift 6 language mode** project-wide. The Xcode 26 compiler is *version* 6.2 but its language mode is `6` — there is no Swift 6.2 *language mode*. Set `SWIFT_VERSION = 6.0` at the Xcode project level (not per target) and `swiftLanguageModes: [.v6]` plus `// swift-tools-version: 6.0` in every `Package.swift`.
 - **Approachable Concurrency on.** Xcode: `SWIFT_APPROACHABLE_CONCURRENCY = YES` at the project level. SPM: enumerate the upcoming features in `swiftSettings`:
   - `.enableUpcomingFeature("NonisolatedNonsendingByDefault")` (SE-0461)
@@ -73,29 +73,49 @@ When introducing a new Xcode target, do not redeclare these settings on the targ
 ## Module breakdown
 
 ### Repo layout (today)
-The target architecture below describes the eventual shape. Today the repo has fewer moving parts:
+Today the repo intentionally has fewer moving parts than the target architecture:
 
 - A single Xcode app target `Slush` (`Slush.xcodeproj`) supports iOS, iPadOS, and macOS from one source tree, plus `SlushTests` (Swift Testing). The split into `SlushiOS` and `SlushMac` arrives when macOS-specific UI (`MenuBarExtra`, `GlobalHotkeyService`) lands; until then both platforms ship from the combined `Slush` target. UI testing is not set up — the template's `SlushUITests` target was removed and will be reintroduced when an actual UI flow needs end-to-end coverage.
 - The app source and test groups are `PBXFileSystemSynchronizedRootGroup`s (Xcode 26 file-system-synchronized groups): adding app files under `Sources/` or test files under `Tests/` makes them part of the corresponding target automatically — no manual project-file edits.
-- `SlushKit/` is the first Swift package and is linked into the app target as a local package.
+- `SlushKit/` is the first Swift package and is linked into the app target as a local package. It remains the temporary implementation home until enough concrete code exists to split along real import boundaries.
 
+Do not create empty packages or move files just to match the target layout. Add a module when it has code, tests, and a narrower dependency surface than the package it is leaving.
 
-### `SlushKit` — Swift Package (shared)
-- Domain models: `Task`, `Transcript`, `TaskDraft`, `Settings`.
-- TCA reducers: `AppFeature`, `RecordFeature`, `TasksFeature`, `SettingsFeature`.
-- Protocols: `SpeechTranscribing`, `LLMClient`, `TaskRepository`, `TranscriptRepository`, `KeychainStoring`, `SettingsStoring`.
-- Implementations: `AppleSpeechTranscriber`, `OpenAICompatibleLLMClient`, `SQLiteDataTaskRepository`, `SQLiteDataTranscriptRepository`, `KeychainStore`, `UserDefaultsSettingsStore`.
+### Target app layout
+Future platform targets should keep app-owned code near the app:
+
+- `Apps/iOS` — `SlushiOSApp`, iOS plist/resources, platform navigation, and SwiftUI views such as `RecordView`, `TasksView`, and `SettingsView`.
+- `Apps/macOS` — `SlushMacApp`, macOS plist/resources, `MenuBarExtra` shell, hotkey/menu integration, settings window, and compact SwiftUI views.
+
+Views are platform-owned. A shared feature can be rendered by multiple views, but view layout, platform navigation, app entry points, and resources belong to the app target.
+
+### Target package layout
+Future reusable code should grow under `Packages/<Module>/Package.swift`, introduced only when there is real code to move:
+
+- `SlushDomain` — shared domain models such as `Task`, `Transcript`, `TaskDraft`, and `Settings`.
+- `PersistenceClient` — task/transcript persistence interfaces and implementations shared by multiple features.
+- `CaptureFeature` — TCA capture, transcription, extraction, and retry behavior. `SpeechClient` and `LLMClient` stay here while capture is their only consumer.
+- `TasksFeature` — task list state, task actions, completion, deletion, and task observation behavior.
+- `SettingsFeature` — settings state, validation, persistence, API-key handling, and settings-specific dependencies.
+
+Avoid a generic `SlushDependencies` package unless a concrete duplication or multi-consumer dependency appears. Prefer narrow dependencies owned by the feature that actually uses them.
+
+### TCA ownership rules
+- Features are behavior-owned, not screen-owned. Split a feature when behavior diverges, not because two platforms render it differently.
+- Views take `StoreOf<Feature>` from the app target and send user-intent actions into shared features.
+- App shell features own tabs, popovers, windows, hotkey routing, and platform navigation; child features own product behavior.
+- Scope stores along stored child feature state. Do not scope through computed view-specific projections.
 
 ### `SlushiOS` — iPhone app target
 - SwiftUI app shell, root `AppView` hosting tab navigation: `RecordView`, `TasksView`, `SettingsView`.
 - Mic + speech permission gating before first record.
-- Depends on `SlushKit`.
+- Initially depends on `SlushKit`; later depends directly on the feature/domain packages it renders.
 
 ### `SlushMac` — menubar app target
 - `MenuBarExtra` host with popover containing `RecordView` (compact) + recent `TasksView`.
 - Standalone `SettingsScene` window.
 - `GlobalHotkeyService` registers the user's shortcut via `Carbon.HIToolbox` `RegisterEventHotKey`.
-- Depends on `SlushKit`.
+- Initially depends on `SlushKit`; later depends directly on the feature/domain packages it renders.
 
 ## TCA reducers (responsibilities)
 - **`AppFeature`** — composes child features, wires `@Dependency` instances of repositories, transcriber, and LLM client.
