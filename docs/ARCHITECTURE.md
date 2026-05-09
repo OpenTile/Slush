@@ -30,7 +30,55 @@ Slush is UX-driven (see PRD `Product principles`, `REQ-031`). The architecture b
 - **All repository, transcription, and LLM work is non-main-actor.** The main actor only formats view state and runs animations. 60 fps during recording is a hard target (`REQ-031`).
 - **Typed input shares the LLM/repository pipeline (`REQ-025`).** No mic, no transcription, no permissions; the same `RecordFeature → LLMClient → TaskRepository → @FetchAll` path applies. The `REQ-031` budgets that don't depend on mic capture (tasks-visible after LLM ≤ 50 ms; UI never blocks) carry over to the typed path unchanged.
 
+## Concurrency & module posture
+
+Load-bearing settings — every Xcode target and Swift package must mirror these. Changing any of them is a deliberate architectural decision, not a tweak.
+
+- **Repo layout.** `App/` holds the Xcode project; `Packages/` holds Swift packages. New packages go under `Packages/<Name>/`; new Xcode targets stay inside `App/Slush.xcodeproj`.
+- **Swift 6 language mode** project-wide. The Xcode 26 compiler is *version* 6.2 but its language mode is `6` — there is no Swift 6.2 *language mode*. Set `SWIFT_VERSION = 6.0` at the Xcode project level (not per target) and `swiftLanguageModes: [.v6]` plus `// swift-tools-version: 6.0` in every `Package.swift`.
+- **Approachable Concurrency on.** Xcode: `SWIFT_APPROACHABLE_CONCURRENCY = YES` at the project level. SPM: enumerate the upcoming features in `swiftSettings`:
+  - `.enableUpcomingFeature("NonisolatedNonsendingByDefault")` (SE-0461)
+  - `.enableUpcomingFeature("InferIsolatedConformances")` (SE-0470)
+  - `GlobalActorIsolatedTypesUsability` (SE-0434) is already enabled in Swift 6 mode and must not be re-listed (the compiler warns).
+- **`MemberImportVisibility` upcoming feature on** (Xcode `SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES`; SPM `.enableUpcomingFeature("MemberImportVisibility")`).
+- **No default actor isolation.** `SWIFT_DEFAULT_ACTOR_ISOLATION` stays unset; `Package.swift` does not call `.defaultIsolation(MainActor.self)`. The Composable Architecture's `@Reducer` and `@ObservableState` macros break under default-MainActor isolation, and the TCA maintainer recommends against the setting ([pointfreeco/swift-composable-architecture#3808](https://github.com/pointfreeco/swift-composable-architecture/issues/3808)). The "main actor only formats view state; infra is non-main" requirement (`REQ-031`) is met via TCA conventions: views and `@ObservableState` adopt `@MainActor` explicitly; reducers stay nonisolated; effects, repositories, transcribers, and LLM clients are `actor`s or nonisolated types. Strict concurrency at level `complete` is implicit under Swift 6 — no separate setting needed.
+- **Tests stay nonisolated by default.** Add `@MainActor` per `@Test` only when a test must touch main-actor state.
+
+**Canonical `Package.swift` for new packages:**
+
+```swift
+// swift-tools-version: 6.0
+import PackageDescription
+
+let swiftSettings: [SwiftSetting] = [
+    .enableUpcomingFeature("MemberImportVisibility"),
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+    .enableUpcomingFeature("InferIsolatedConformances"),
+]
+
+let package = Package(
+    name: "<Name>",
+    platforms: [.iOS("26.4"), .macOS("26.4")],
+    products: [.library(name: "<Name>", targets: ["<Name>"])],
+    targets: [
+        .target(name: "<Name>", swiftSettings: swiftSettings),
+        .testTarget(name: "<Name>Tests", dependencies: ["<Name>"], swiftSettings: swiftSettings),
+    ],
+    swiftLanguageModes: [.v6]
+)
+```
+
+When introducing a new Xcode target, do not redeclare these settings on the target — they already inherit from the project level.
+
 ## Module breakdown
+
+### Repo layout (today)
+The target architecture below describes the eventual shape. Today the repo has fewer moving parts:
+
+- A single Xcode app target `Slush` (`App/Slush.xcodeproj`) supports iOS, iPadOS, and macOS from one source tree, plus `SlushTests` (Swift Testing). The split into `SlushiOS` and `SlushMac` arrives when macOS-specific UI (`MenuBarExtra`, `GlobalHotkeyService`) lands; until then both platforms ship from the combined `Slush` target. UI testing is not set up — the template's `SlushUITests` target was removed and will be reintroduced when an actual UI flow needs end-to-end coverage.
+- The app source group is a `PBXFileSystemSynchronizedRootGroup` (Xcode 26 file-system-synchronized group): adding a file under `App/Slush/` makes it part of the target automatically — no manual project-file edits.
+- `Packages/SlushKit/` is the first Swift package; future kit packages live as siblings under `Packages/`.
+
 
 ### `SlushKit` — Swift Package (shared)
 - Domain models: `Task`, `Transcript`, `TaskDraft`, `Settings`.
