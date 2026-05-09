@@ -6,13 +6,13 @@ import SwiftUI
 
 @main
 struct SlushApp: App {
-    init() {
-        _ = SlushKit.identifier
-    }
+  init() {
+    _ = SlushKit.identifier
+  }
 
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
     }
+  }
 }

@@ -5,7 +5,8 @@ import Testing
 @testable import SlushKit
 
 struct SlushKitTests {
-    @Test func moduleExists() {
-        _ = SlushKit.self
-    }
+  @Test
+  func moduleExists() {
+    _ = SlushKit.self
+  }
 }

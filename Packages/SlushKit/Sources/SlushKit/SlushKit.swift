@@ -3,6 +3,6 @@
 
 /// Marker for the SlushKit module. Replace with the first real type when work begins.
 public enum SlushKit {
-    /// Identifier referenced by hosts so the linker keeps SlushKit while the module has no real API yet.
-    public static let identifier = "SlushKit"
+  /// Identifier referenced by hosts so the linker keeps SlushKit while the module has no real API yet.
+  public static let identifier = "SlushKit"
 }
