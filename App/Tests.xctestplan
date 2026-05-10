@@ -21,8 +21,8 @@
     {
       "target" : {
         "containerPath" : "container:..\/SlushKit",
-        "identifier" : "SomeLibTests",
-        "name" : "SomeLibTests"
+        "identifier" : "AppFeatureTests",
+        "name" : "AppFeatureTests"
       }
     }
   ],
