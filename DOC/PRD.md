@@ -34,6 +34,8 @@ Slush is **UX-driven**. The product only succeeds if it feels invisible — fast
 - **US-006** — As a user with a preferred LLM provider, I want to bring my own provider for task extraction, so that I am not locked in.
 - **US-007** — As a user whose extraction just failed, I want to retry it without re-recording, so that I don't lose what I said.
 - **US-008** — As a user, I want to type my brain dump, so that I can capture thoughts in writing.
+- **US-009** — As a user, I want to edit a captured thought, so that I can fix or clarify it after saving.
+- **US-010** — As a user, I want to delete a captured thought, so that I can remove captures I no longer need.
 
 ## Core loop
 Press → speak → release → tasks appear.
