@@ -2,11 +2,11 @@
 // Unauthorized using, copying, distribution, or modification prohibited.
 
 import Testing
-@testable import SlushKit
+@testable import SomeLib
 
-struct SlushKitTests {
+struct SomeEnumTests {
   @Test
   func moduleExists() {
-    _ = SlushKit.self
+    _ = SomeEnum.self
   }
 }

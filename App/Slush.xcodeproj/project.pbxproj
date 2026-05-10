@@ -3,50 +3,38 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 100;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		75DDCC012FAF84510064F652 /* SlushKit in Frameworks */ = {isa = PBXBuildFile; productRef = 75DDCC022FAF84510064F652 /* SlushKit */; };
+		75CB32732FAFDF0C00411AD3 /* SomeLib in Frameworks */ = {isa = PBXBuildFile; productRef = 75CB32722FAFDF0C00411AD3 /* SomeLib */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		75A9725E2FAF84510064F652 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A972482FAF844E0064F652 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 75A9724F2FAF844E0064F652;
-			remoteInfo = Slush;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		7582C1B22FAFABA5004F8176 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
-		7582C1B62FAFABA5004F8176 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		7582C1B72FAFABA5004F8176 /* SlushKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SlushKit; sourceTree = "<group>"; };
+		7540DBC52FAFDFDB00AE68C5 /* Tests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tests.xctestplan; sourceTree = "<group>"; };
 		75A972502FAF844E0064F652 /* Slush.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Slush.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		75A9725D2FAF84510064F652 /* SlushTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlushTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		75CB326A2FAFDEA900411AD3 /* SlushKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SlushKit; path = ../SlushKit; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		753B2BF42FAFD59C007D3AE9 /* Exceptions for "Client" folder in "Slush" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				ContentView.swift,
+				SlushApp.swift,
+			);
+			target = 75A9724F2FAF844E0064F652 /* Slush */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		7582C1B52FAFABA5004F8176 /* DOC */ = {
+		753B2BED2FAFD59B007D3AE9 /* Client */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DOC;
-			sourceTree = "<group>";
-		};
-		7582C1BE2FAFABA5004F8176 /* SPEC */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SPEC;
-			sourceTree = "<group>";
-		};
-		75A972522FAF844F0064F652 /* Sources */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		75A972602FAF84510064F652 /* Tests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Tests;
+			exceptions = (
+				753B2BF42FAFD59C007D3AE9 /* Exceptions for "Client" folder in "Slush" target */,
+			);
+			path = Client;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -54,18 +42,9 @@
 /* Begin PBXFrameworksBuildPhase section */
 		75A9724D2FAF844E0064F652 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
-				75DDCC012FAF84510064F652 /* SlushKit in Frameworks */,
+				75CB32732FAFDF0C00411AD3 /* SomeLib in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		75A9725A2FAF84510064F652 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -73,13 +52,10 @@
 		75A972472FAF844E0064F652 = {
 			isa = PBXGroup;
 			children = (
-				75A972522FAF844F0064F652 /* Sources */,
-				75A972602FAF84510064F652 /* Tests */,
-				7582C1B72FAFABA5004F8176 /* SlushKit */,
-				7582C1B22FAFABA5004F8176 /* AGENTS.md */,
-				7582C1B62FAFABA5004F8176 /* README.md */,
-				7582C1B52FAFABA5004F8176 /* DOC */,
-				7582C1BE2FAFABA5004F8176 /* SPEC */,
+				75CB326A2FAFDEA900411AD3 /* SlushKit */,
+				7540DBC52FAFDFDB00AE68C5 /* Tests.xctestplan */,
+				753B2BED2FAFD59B007D3AE9 /* Client */,
+				75CB32712FAFDF0C00411AD3 /* Frameworks */,
 				75A972512FAF844F0064F652 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,9 +64,15 @@
 			isa = PBXGroup;
 			children = (
 				75A972502FAF844E0064F652 /* Slush.app */,
-				75A9725D2FAF84510064F652 /* SlushTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		75CB32712FAFDF0C00411AD3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -106,41 +88,13 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				75A972522FAF844F0064F652 /* Sources */,
-			);
 			name = Slush;
 			packageProductDependencies = (
-				75DDCC022FAF84510064F652 /* SlushKit */,
+				75CB32722FAFDF0C00411AD3 /* SomeLib */,
 			);
 			productName = Slush;
 			productReference = 75A972502FAF844E0064F652 /* Slush.app */;
 			productType = "com.apple.product-type.application";
-		};
-		75A9725C2FAF84510064F652 /* SlushTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 75A972742FAF84510064F652 /* Build configuration list for PBXNativeTarget "SlushTests" */;
-			buildPhases = (
-				75A972592FAF84510064F652 /* Sources */,
-				75A9725A2FAF84510064F652 /* Frameworks */,
-				75A9725B2FAF84510064F652 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				75A9725F2FAF84510064F652 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				75A972602FAF84510064F652 /* Tests */,
-			);
-			name = SlushTests;
-			packageProductDependencies = (
-			);
-			productName = SlushTests;
-			productReference = 75A9725D2FAF84510064F652 /* SlushTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -155,10 +109,6 @@
 					75A9724F2FAF844E0064F652 = {
 						CreatedOnToolsVersion = 26.4.1;
 					};
-					75A9725C2FAF84510064F652 = {
-						CreatedOnToolsVersion = 26.4.1;
-						TestTargetID = 75A9724F2FAF844E0064F652;
-					};
 				};
 			};
 			buildConfigurationList = 75A9724B2FAF844E0064F652 /* Build configuration list for PBXProject "Slush" */;
@@ -171,15 +121,14 @@
 			mainGroup = 75A972472FAF844E0064F652;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "SlushKit" */,
+				75CB32672FAFDE9900411AD3 /* XCLocalSwiftPackageReference "../SlushKit" */,
 			);
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 100;
 			productRefGroup = 75A972512FAF844F0064F652 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				75A9724F2FAF844E0064F652 /* Slush */,
-				75A9725C2FAF84510064F652 /* SlushTests */,
 			);
 		};
 /* End PBXProject section */
@@ -187,47 +136,21 @@
 /* Begin PBXResourcesBuildPhase section */
 		75A9724E2FAF844E0064F652 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		75A9725B2FAF84510064F652 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		75A9724C2FAF844E0064F652 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		75A972592FAF84510064F652 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		75A9725F2FAF84510064F652 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 75A9724F2FAF844E0064F652 /* Slush */;
-			targetProxy = 75A9725E2FAF84510064F652 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		75A9726F2FAF84510064F652 /* Debug */ = {
+		75A9726F2FAF84510064F652 /* Debug configuration for PBXProject "Slush" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -292,7 +215,7 @@
 			};
 			name = Debug;
 		};
-		75A972702FAF84510064F652 /* Release */ = {
+		75A972702FAF84510064F652 /* Release configuration for PBXProject "Slush" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -349,7 +272,7 @@
 			};
 			name = Release;
 		};
-		75A972722FAF84510064F652 /* Debug */ = {
+		75A972722FAF84510064F652 /* Debug configuration for PBXNativeTarget "Slush" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -390,7 +313,7 @@
 			};
 			name = Debug;
 		};
-		75A972732FAF84510064F652 /* Release */ = {
+		75A972732FAF84510064F652 /* Release configuration for PBXNativeTarget "Slush" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -427,52 +350,6 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				XROS_DEPLOYMENT_TARGET = 26.4;
-			};
-			name = Release;
-		};
-		75A972752FAF84510064F652 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UM3QPHF8E3;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
-				MACOSX_DEPLOYMENT_TARGET = 26.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.chenchik.SlushTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Slush.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Slush";
-				XROS_DEPLOYMENT_TARGET = 26.4;
-			};
-			name = Debug;
-		};
-		75A972762FAF84510064F652 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = UM3QPHF8E3;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
-				MACOSX_DEPLOYMENT_TARGET = 26.4;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.chenchik.SlushTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Slush.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Slush";
 				XROS_DEPLOYMENT_TARGET = 26.4;
 			};
 			name = Release;
@@ -483,44 +360,32 @@
 		75A9724B2FAF844E0064F652 /* Build configuration list for PBXProject "Slush" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				75A9726F2FAF84510064F652 /* Debug */,
-				75A972702FAF84510064F652 /* Release */,
+				75A9726F2FAF84510064F652 /* Debug configuration for PBXProject "Slush" */,
+				75A972702FAF84510064F652 /* Release configuration for PBXProject "Slush" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		75A972712FAF84510064F652 /* Build configuration list for PBXNativeTarget "Slush" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				75A972722FAF84510064F652 /* Debug */,
-				75A972732FAF84510064F652 /* Release */,
+				75A972722FAF84510064F652 /* Debug configuration for PBXNativeTarget "Slush" */,
+				75A972732FAF84510064F652 /* Release configuration for PBXNativeTarget "Slush" */,
 			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		75A972742FAF84510064F652 /* Build configuration list for PBXNativeTarget "SlushTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				75A972752FAF84510064F652 /* Debug */,
-				75A972762FAF84510064F652 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "SlushKit" */ = {
+		75CB32672FAFDE9900411AD3 /* XCLocalSwiftPackageReference "../SlushKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = SlushKit;
+			relativePath = ../SlushKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		75DDCC022FAF84510064F652 /* SlushKit */ = {
+		75CB32722FAFDF0C00411AD3 /* SomeLib */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 75DDCC032FAF84510064F652 /* XCLocalSwiftPackageReference "SlushKit" */;
-			productName = SlushKit;
+			productName = SomeLib;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
