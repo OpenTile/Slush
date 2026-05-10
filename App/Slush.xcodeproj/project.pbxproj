@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		75CB32732FAFDF0C00411AD3 /* SomeLib in Frameworks */ = {isa = PBXBuildFile; productRef = 75CB32722FAFDF0C00411AD3 /* SomeLib */; };
+		75CB32732FAFDF0C00411AD3 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 75CB32722FAFDF0C00411AD3 /* AppFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +21,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets.xcassets,
-				ContentView.swift,
 				SlushApp.swift,
 			);
 			target = 75A9724F2FAF844E0064F652 /* Slush */;
@@ -43,7 +42,7 @@
 		75A9724D2FAF844E0064F652 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
-				75CB32732FAFDF0C00411AD3 /* SomeLib in Frameworks */,
+				75CB32732FAFDF0C00411AD3 /* AppFeature in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -90,7 +89,7 @@
 			);
 			name = Slush;
 			packageProductDependencies = (
-				75CB32722FAFDF0C00411AD3 /* SomeLib */,
+				75CB32722FAFDF0C00411AD3 /* AppFeature */,
 			);
 			productName = Slush;
 			productReference = 75A972502FAF844E0064F652 /* Slush.app */;
@@ -383,9 +382,9 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		75CB32722FAFDF0C00411AD3 /* SomeLib */ = {
+		75CB32722FAFDF0C00411AD3 /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SomeLib;
+			productName = AppFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
